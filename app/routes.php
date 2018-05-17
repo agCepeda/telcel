@@ -14,12 +14,24 @@ $app->group('/auth', function() {
     $this->post('/login', function ($request, $response, $args) {
         sleep(1);
 
+        $usernames = ['j.r.saenz', 'j.maussan', 'c.trejo'];
+
         $username = $request->getParam('username', null);
         $password = $request->getParam('password', null);
 
-        if ($username == 'h.hipolito') {
-            if ($password == '') {
-                $fakeResponse = require __DIR__ . '/fake/login.php';
+        if (in_array($username, $usernames)) {
+            if ($password == '12345') {
+                switch ($username) {
+                    case "j.r.saenz":
+                        $fakeResponse = require __DIR__ . '/fake/login_role_ejecutivo.php';
+                        break;
+                    case "j.maussan":
+                        $fakeResponse = require __DIR__ . '/fake/login_role_distribuidor.php';
+                        break;
+                    case "c.trejo":
+                        $fakeResponse = require __DIR__ . '/fake/login_role_promotor.php';
+                        break;
+                }
                 
                 return $response->withStatus(200)
                     ->withHeader('Content-Type', 'application/json')
