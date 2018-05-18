@@ -32,7 +32,7 @@ $app->group('/auth', function() {
                         $fakeResponse = require __DIR__ . '/fake/login_role_promotor.php';
                         break;
                 }
-                
+
                 return $response->withStatus(200)
                     ->withHeader('Content-Type', 'application/json')
                     ->write(json_encode($fakeResponse));
@@ -76,5 +76,28 @@ $app->get('/store/{storeId}', function ($request, $response, $args) {
 
     return $response->withStatus(200)
         ->withHeader('Content-Type', 'application/json')
+        ->write("");
+});
+
+$app->get('/sale', function ($request, $response, $args) {
+    $salesJson = file_get_contents(__DIR__ . '/fake/sales.json');
+    
+    return $response->withStatus(200)
+        ->withHeader('Content-Type', 'application/json')
+        ->write($salesJson);
+});
+
+$app->post('/sale', function ($request, $response, $args) {
+    $salesJson = file_get_contents(__DIR__ . '/fake/sales.json');
+
+    $params = $request->getParams();
+
+    $salesArray = json_decode($salesJson);
+
+    array_push($salesArray, $params);
+
+    $salesJson = file_put_contents(__DIR__ . '/fake/sales.json', json_encode($salesArray));
+    
+    return $response->withStatus(200)
         ->write("");
 });
