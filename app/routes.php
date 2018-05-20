@@ -99,5 +99,28 @@ $app->post('/sale', function ($request, $response, $args) {
     $salesJson = file_put_contents(__DIR__ . '/fake/sales.json', json_encode($salesArray));
     
     return $response->withStatus(200)
-        ->write("");
+        ->write(json_encode($params));
+});
+
+$app->get('/promotion', function ($request, $response, $args) {
+    $promotionsJson = file_get_contents(__DIR__ . '/fake/promotions.json');
+    
+    return $response->withStatus(200)
+        ->withHeader('Content-Type', 'application/json')
+        ->write($promotionsJson);
+});
+
+$app->post('/promotion', function ($request, $response, $args) {
+    $promotionsJson = file_get_contents(__DIR__ . '/fake/promotions.json');
+
+    $params = $request->getParams();
+
+    $promotionsArray = json_decode($promotionsJson);
+
+    array_push($promotionsArray, $params);
+
+    file_put_contents(__DIR__ . '/fake/promotions.json', json_encode($promotionsArray));
+    
+    return $response->withStatus(200)
+        ->write(json_encode($params));
 });
